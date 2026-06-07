@@ -1,0 +1,226 @@
+/* ===========================
+   iOS Calculator — Dark Mode
+   Pixel-perfect clone
+   =========================== */
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('San Francisco bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+:root {
+  --bg: #000000;
+  --display-result-color: #ffffff;
+  --display-expression-color: rgba(255, 255, 255, 0.55);
+
+  --btn-operator: #FF9F0A;
+  --btn-operator-active: #ffffff;
+  --btn-operator-text-active: #FF9F0A;
+
+  --btn-function: #A5A5A5;
+  --btn-function-text: #000000;
+
+  --btn-number: #333333;
+  --btn-number-text: #ffffff;
+
+  --btn-press-darken: rgba(0, 0, 0, 0.25);
+
+  /* Layout */
+  --gap: clamp(10px, 2.5vw, 13px);
+  --btn-size: clamp(72px, 22vw, 84px);
+  --font-display: "SF Pro Display", -apple-system, "Helvetica Neue", sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 100dvh;
+  background: var(--bg);
+  font-family: var(--font-display);
+}
+
+/* ── Calculator Shell ── */
+.calculator {
+  width: 100%;
+  max-width: 428px;
+  padding: 0 var(--gap) env(safe-area-inset-bottom, 16px);
+  padding-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Display ── */
+.display {
+  padding: 0 8px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-height: 120px;
+  gap: 2px;
+}
+
+.expression {
+  font-size: clamp(20px, 5vw, 24px);
+  color: var(--display-expression-color);
+  font-weight: 300;
+  letter-spacing: -0.3px;
+  min-height: 1.3em;
+  max-width: 95%;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.result {
+  font-size: clamp(64px, 18vw, 96px);
+  font-weight: 200;
+  color: var(--display-result-color);
+  letter-spacing: -2px;
+  line-height: 1;
+  text-align: right;
+  width: 100%;
+  overflow: hidden;
+  transition: font-size 0.1s ease;
+}
+
+.result.shrink-3 { font-size: clamp(44px, 13vw, 68px); }
+.result.shrink-4 { font-size: clamp(34px, 10vw, 52px); }
+.result.shrink-5 { font-size: clamp(28px, 8vw, 40px); }
+
+/* ── Button Grid ── */
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+  padding-top: var(--gap);
+}
+
+/* ── Base Button ── */
+.btn {
+  position: relative;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 7.5vw, 38px);
+  font-weight: 400;
+  line-height: 1;
+  outline: none;
+  transition:
+    filter 0.07s ease,
+    transform 0.07s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Ripple overlay */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.07s ease;
+}
+
+.btn:active::after {
+  background: var(--btn-press-darken);
+}
+
+/* ── Number Buttons ── */
+.btn-number {
+  background: var(--btn-number);
+  color: var(--btn-number-text);
+}
+
+/* ── Function Buttons ── */
+.btn-function {
+  background: var(--btn-function);
+  color: var(--btn-function-text);
+  font-size: clamp(22px, 6.5vw, 34px);
+  font-weight: 500;
+}
+
+/* ── Operator Buttons ── */
+.btn-operator {
+  background: var(--btn-operator);
+  color: #ffffff;
+  font-size: clamp(28px, 8vw, 42px);
+  font-weight: 300;
+}
+
+/* Active operator (highlighted = white bg, orange text) */
+.btn-operator.active {
+  background: var(--btn-operator-active);
+  color: var(--btn-operator-text-active);
+}
+
+/* Subtle ring pulse when operator is held active */
+.btn-operator.active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(255, 159, 10, 0.35);
+  pointer-events: none;
+}
+
+/* ── Zero Button (wide) ── */
+.btn-zero {
+  grid-column: span 2;
+  border-radius: 9999px;
+  aspect-ratio: unset;
+  justify-content: flex-start;
+  padding-left: clamp(26px, 7.5vw, 36px);
+  font-size: clamp(26px, 7.5vw, 38px);
+}
+
+/* ── Press animation ── */
+.btn:active {
+  transform: scale(0.94);
+  filter: brightness(0.85);
+}
+
+/* Prevent double-tap zoom on mobile */
+.buttons {
+  touch-action: manipulation;
+}
+
+/* ── Scrolling display shrink support ── */
+@media (max-height: 700px) {
+  .display { min-height: 90px; }
+  .result { font-size: clamp(52px, 14vw, 72px); }
+}
+
+@media (max-height: 600px) {
+  :root { --gap: 9px; }
+  .display { min-height: 70px; }
+  .result { font-size: clamp(42px, 12vw, 60px); }
+}
