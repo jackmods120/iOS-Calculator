@@ -3,13 +3,9 @@
    Pixel-perfect clone
    =========================== */
 
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('jack.ttf') format('truetype');
-  font-weight: 100 900;
-  font-display: swap;
-  
-}
+/* SF Pro Display — نزیکترین فۆنت بە ئایئۆس */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap');
+
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -40,7 +36,7 @@
   /* Layout */
   --gap: clamp(10px, 2.5vw, 13px);
   --btn-size: clamp(72px, 22vw, 84px);
-  --font-display: "SF Pro Display", -apple-system, "Helvetica Neue", sans-serif;
+  --font-display: 'Inter', -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif;
 }
 
 html, body {
