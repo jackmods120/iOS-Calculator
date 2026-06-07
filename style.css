@@ -5,8 +5,10 @@
 
 @font-face {
   font-family: 'SF Pro Display';
-  src: url('San Francisco bold.ttf') format('truetype');
-  font-weight: bold;
+  src: url('jack.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+  
 }
 
 *, *::before, *::after {
